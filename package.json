@@ -2,7 +2,7 @@
   "name": "mersenne-twister",
   "version": "0.1.0",
   "description": "Mersenne twister pseudorandom number generator",
-  "main": "index.js",
+  "main": "src/mersenne-twister.js",
   "scripts": {
     "test": "make test"
   },
