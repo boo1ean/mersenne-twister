@@ -25,7 +25,7 @@
    A C-program for MT19937, with initialization improved 2002/1/26.
    Coded by Takuji Nishimura and Makoto Matsumoto.
  
-   Before using, initialize the state by using init_genrand(seed)  
+   Before using, initialize the state by using init_seed(seed)  
    or init_by_array(init_key, key_length).
  
    Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
@@ -79,11 +79,12 @@ var MersenneTwister = function(seed) {
 	this.mt = new Array(this.N); /* the array for the state vector */
 	this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
 
-	this.init_genrand(seed);
+	this.init_seed(seed);
 }  
 
 /* initializes mt[N] with a seed */
-MersenneTwister.prototype.init_genrand = function(s) {
+/* origin name init_genrand */
+MersenneTwister.prototype.init_seed = function(s) {
 	this.mt[0] = s >>> 0;
 	for (this.mti=1; this.mti<this.N; this.mti++) {
 		var s = this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30);
@@ -104,7 +105,7 @@ MersenneTwister.prototype.init_genrand = function(s) {
 /* slight change for C++, 2004/2/26 */
 MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
 	var i, j, k;
-	this.init_genrand(19650218);
+	this.init_seed(19650218);
 	i=1; j=0;
 	k = (this.N>key_length ? this.N : key_length);
 	for (; k; k--) {
@@ -138,8 +139,8 @@ MersenneTwister.prototype.random_int = function() {
 	if (this.mti >= this.N) { /* generate N words at one time */
 		var kk;
 
-		if (this.mti == this.N+1)   /* if init_genrand() has not been called, */
-			this.init_genrand(5489); /* a default initial seed is used */
+		if (this.mti == this.N+1)  /* if init_seed() has not been called, */
+			this.init_seed(5489);  /* a default initial seed is used */
 
 		for (kk=0;kk<this.N-this.M;kk++) {
 			y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
