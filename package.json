@@ -23,5 +23,9 @@
   "bugs": {
     "url": "https://github.com/boo1ean/mersenne-twister/issues"
   },
-  "homepage": "https://github.com/boo1ean/mersenne-twister"
+  "homepage": "https://github.com/boo1ean/mersenne-twister",
+  "devDependencies": {
+    "should": "~3.1.2",
+    "mocha": "~1.17.1"
+  }
 }
