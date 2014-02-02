@@ -129,7 +129,8 @@ MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
 }
 
 /* generates a random number on [0,0xffffffff]-interval */
-MersenneTwister.prototype.genrand_int32 = function() {
+/* origin name genrand_int32 */
+MersenneTwister.prototype.random_int = function() {
 	var y;
 	var mag01 = new Array(0x0, this.MATRIX_A);
 	/* mag01[x] = x * MATRIX_A  for x=0,1 */
@@ -166,31 +167,35 @@ MersenneTwister.prototype.genrand_int32 = function() {
 }
 
 /* generates a random number on [0,0x7fffffff]-interval */
-MersenneTwister.prototype.genrand_int31 = function() {
-	return (this.genrand_int32()>>>1);
+/* origin name genrand_int31 */
+MersenneTwister.prototype.random_int31 = function() {
+	return (this.random_int()>>>1);
 }
 
 /* generates a random number on [0,1]-real-interval */
-MersenneTwister.prototype.genrand_real1 = function() {
-	return this.genrand_int32()*(1.0/4294967295.0); 
+/* origin name genrand_real1 */
+MersenneTwister.prototype.random_incl = function() {
+	return this.random_int()*(1.0/4294967295.0); 
 	/* divided by 2^32-1 */ 
 }
 
 /* generates a random number on [0,1)-real-interval */
 MersenneTwister.prototype.random = function() {
-	return this.genrand_int32()*(1.0/4294967296.0); 
+	return this.random_int()*(1.0/4294967296.0); 
 	/* divided by 2^32 */
 }
 
 /* generates a random number on (0,1)-real-interval */
-MersenneTwister.prototype.genrand_real3 = function() {
-	return (this.genrand_int32() + 0.5)*(1.0/4294967296.0); 
+/* origin name genrand_real3 */
+MersenneTwister.prototype.random_excl = function() {
+	return (this.random_int() + 0.5)*(1.0/4294967296.0); 
 	/* divided by 2^32 */
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
-MersenneTwister.prototype.genrand_res53 = function() { 
-	var a=this.genrand_int32()>>>5, b=this.genrand_int32()>>>6; 
+/* origin name genrand_res53 */
+MersenneTwister.prototype.random_long = function() { 
+	var a=this.random_int()>>>5, b=this.random_int()>>>6; 
 	return(a*67108864.0+b)*(1.0/9007199254740992.0); 
 } 
 
