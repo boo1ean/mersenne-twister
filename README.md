@@ -1,5 +1,4 @@
-Mersenne Twister
-================
+## Pseudorandom number generator [![Build Status](https://travis-ci.org/boo1ean/mersenne-twister.png?branch=master)](https://travis-ci.org/boo1ean/mersenne-twister)
 
 Mersenne Twister pseudorandom number generator.
 
