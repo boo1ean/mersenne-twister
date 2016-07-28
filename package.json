@@ -1,6 +1,6 @@
 {
   "name": "mersenne-twister",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mersenne twister pseudorandom number generator",
   "main": "src/mersenne-twister.js",
   "scripts": {
