@@ -2,50 +2,50 @@
   https://github.com/banksean wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
   so it's better encapsulated. Now you can have multiple random number generators
   and they won't stomp all over eachother's state.
-  
+
   If you want to use this as a substitute for Math.random(), use the random()
   method like so:
-  
+
   var m = new MersenneTwister();
   var randomNumber = m.random();
-  
+
   You can also call the other genrand_{foo}() methods on the instance.
- 
+
   If you want to use a specific seed in order to get a repeatable random
   sequence, pass an integer into the constructor:
- 
+
   var m = new MersenneTwister(123);
- 
+
   and that will always produce the same random sequence.
- 
+
   Sean McCullough (banksean@gmail.com)
 */
- 
-/* 
+
+/*
    A C-program for MT19937, with initialization improved 2002/1/26.
    Coded by Takuji Nishimura and Makoto Matsumoto.
- 
-   Before using, initialize the state by using init_seed(seed)  
+
+   Before using, initialize the state by using init_seed(seed)
    or init_by_array(init_key, key_length).
- 
+
    Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
-   All rights reserved.                          
- 
+   All rights reserved.
+
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions
    are met:
- 
+
      1. Redistributions of source code must retain the above copyright
         notice, this list of conditions and the following disclaimer.
- 
+
      2. Redistributions in binary form must reproduce the above copyright
         notice, this list of conditions and the following disclaimer in the
         documentation and/or other materials provided with the distribution.
- 
-     3. The names of its contributors may not be used to endorse or promote 
-        products derived from this software without specific prior written 
+
+     3. The names of its contributors may not be used to endorse or promote
+        products derived from this software without specific prior written
         permission.
- 
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -57,19 +57,19 @@
    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
- 
+
+
    Any feedback is very welcome.
    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
- 
+
 var MersenneTwister = function(seed) {
 	if (seed == undefined) {
 		seed = new Date().getTime();
-	} 
+	}
 
-	/* Period parameters */  
+	/* Period parameters */
 	this.N = 624;
 	this.M = 397;
 	this.MATRIX_A = 0x9908b0df;   /* constant vector a */
@@ -79,8 +79,13 @@ var MersenneTwister = function(seed) {
 	this.mt = new Array(this.N); /* the array for the state vector */
 	this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
 
-	this.init_seed(seed);
-}  
+        if (seed.constructor == Array) {
+    	    this.init_by_array(seed, seed.length);
+        }
+        else {
+    	    this.init_seed(seed);
+        }
+}
 
 /* initializes mt[N] with a seed */
 /* origin name init_genrand */
@@ -126,13 +131,13 @@ MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
 		if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
 	}
 
-	this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */ 
+	this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
 }
 
 /* generates a random number on [0,0xffffffff]-interval */
 /* origin name genrand_int32 */
 MersenneTwister.prototype.random_int = function() {
-	var y;
+        var y;
 	var mag01 = new Array(0x0, this.MATRIX_A);
 	/* mag01[x] = x * MATRIX_A  for x=0,1 */
 
@@ -164,7 +169,7 @@ MersenneTwister.prototype.random_int = function() {
 	y ^= (y << 15) & 0xefc60000;
 	y ^= (y >>> 18);
 
-	return y >>> 0;
+        return y >>> 0;
 }
 
 /* generates a random number on [0,0x7fffffff]-interval */
@@ -176,29 +181,29 @@ MersenneTwister.prototype.random_int31 = function() {
 /* generates a random number on [0,1]-real-interval */
 /* origin name genrand_real1 */
 MersenneTwister.prototype.random_incl = function() {
-	return this.random_int()*(1.0/4294967295.0); 
-	/* divided by 2^32-1 */ 
+	return this.random_int()*(1.0/4294967295.0);
+	/* divided by 2^32-1 */
 }
 
 /* generates a random number on [0,1)-real-interval */
 MersenneTwister.prototype.random = function() {
-	return this.random_int()*(1.0/4294967296.0); 
+	return this.random_int()*(1.0/4294967296.0);
 	/* divided by 2^32 */
 }
 
 /* generates a random number on (0,1)-real-interval */
 /* origin name genrand_real3 */
 MersenneTwister.prototype.random_excl = function() {
-	return (this.random_int() + 0.5)*(1.0/4294967296.0); 
+	return (this.random_int() + 0.5)*(1.0/4294967296.0);
 	/* divided by 2^32 */
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
 /* origin name genrand_res53 */
-MersenneTwister.prototype.random_long = function() { 
-	var a=this.random_int()>>>5, b=this.random_int()>>>6; 
-	return(a*67108864.0+b)*(1.0/9007199254740992.0); 
-} 
+MersenneTwister.prototype.random_long = function() {
+	var a=this.random_int()>>>5, b=this.random_int()>>>6;
+	return(a*67108864.0+b)*(1.0/9007199254740992.0);
+}
 
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
