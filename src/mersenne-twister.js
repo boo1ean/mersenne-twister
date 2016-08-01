@@ -79,12 +79,12 @@ var MersenneTwister = function(seed) {
 	this.mt = new Array(this.N); /* the array for the state vector */
 	this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
 
-        if (seed.constructor == Array) {
-    	    this.init_by_array(seed, seed.length);
-        }
-        else {
-    	    this.init_seed(seed);
-        }
+	if (seed.constructor == Array) {
+		this.init_by_array(seed, seed.length);
+	}
+	else {
+		this.init_seed(seed);
+	}
 }
 
 /* initializes mt[N] with a seed */
@@ -137,7 +137,7 @@ MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
 /* generates a random number on [0,0xffffffff]-interval */
 /* origin name genrand_int32 */
 MersenneTwister.prototype.random_int = function() {
-        var y;
+	var y;
 	var mag01 = new Array(0x0, this.MATRIX_A);
 	/* mag01[x] = x * MATRIX_A  for x=0,1 */
 
@@ -169,7 +169,7 @@ MersenneTwister.prototype.random_int = function() {
 	y ^= (y << 15) & 0xefc60000;
 	y ^= (y >>> 18);
 
-        return y >>> 0;
+	return y >>> 0;
 }
 
 /* generates a random number on [0,0x7fffffff]-interval */
